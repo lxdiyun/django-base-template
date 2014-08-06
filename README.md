@@ -93,19 +93,20 @@ In the next version of this template (for Django 1.7), South will likely be remo
 [docs]: https://docs.djangoproject.com/en/dev/topics/migrations/
 
 ## Nginx and uWSGI setup ##
-
 All the examples settings is under folder production_settings
+```
 production_settings
 |-- nginx_direct.conf
 |-- nginx_proxy_80.conf
 |-- nginx_proxy_8000.conf
 |-- uwsgi.ini
 `-- uwsgi_params
+```
 
 ### uWSGI setup ###
 Update file uwsgi.ini and uwsgi_params file if necessary, then copy uwsgi.ini to /etc/uwsgi/vassals. Restart the emperor.uwsgi services.
 
-#### Nginx setup ####
+### Nginx setup ###
 If you want to server the django directly under the default 80 port vhost, use the config file nginx_direct.conf.
 For example in nginx.conf:
 ```
@@ -192,7 +193,7 @@ More information can be found in below documentation:
 - [Setting up Django and your web server with uWSGI and nginx] 
 - [Module ngx_http_core_module]
 - [Module ngx_http_proxy_module] 
-- [Module ngx_http_uwsgi_module ]
+- [Module ngx_http_uwsgi_module]
 
 [Setting up Django and your web server with uWSGI and nginx]: http://uwsgi-docs.readthedocs.org/en/latest/tutorials/Django_and_nginx.html
 [Module ngx_http_core_module]: http://nginx.org/en/docs/http/ngx_http_core_module.html
