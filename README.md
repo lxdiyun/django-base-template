@@ -186,14 +186,19 @@ Remeber to change the project folder permissions. Then restart the nginx. If all
 Otherwise please check the error log of nginx and uwsgi to debug.
 
 For troubles using sub url to server. Please pay attetion to SECRET_KEY settings in uwsgi_params, proxy_set_header and sub_filter settings in nginx config.
-And install third party sub_filter module if necessary.
-[docs]: http://wiki.nginx.org/HttpSubsModule
+And install [Third party HttpSubsModule] if necessary. 
 
 More information can be found in below documentation:
-[docs]: http://uwsgi-docs.readthedocs.org/en/latest/tutorials/Django_and_nginx.html
-[docs]: http://nginx.org/en/docs/http/ngx_http_core_module.html
-[docs]: http://nginx.org/en/docs/http/ngx_http_proxy_module.html
-[docs]: http://nginx.org/en/docs/http/ngx_http_uwsgi_module.html
+- [Setting up Django and your web server with uWSGI and nginx] 
+- [Module ngx_http_core_module]
+- [Module ngx_http_proxy_module] 
+- [Module ngx_http_uwsgi_module ]
+
+[Setting up Django and your web server with uWSGI and nginx]: http://uwsgi-docs.readthedocs.org/en/latest/tutorials/Django_and_nginx.html
+[Module ngx_http_core_module]: http://nginx.org/en/docs/http/ngx_http_core_module.html
+[Module ngx_http_proxy_module]: http://nginx.org/en/docs/http/ngx_http_proxy_module.html
+[Module ngx_http_uwsgi_module]: http://nginx.org/en/docs/http/ngx_http_uwsgi_module.html
+[Third party HttpSubsModule]: http://wiki.nginx.org/HttpSubsModule
 
 {% endif %}
 # The {{ project_name|title }} Project #
