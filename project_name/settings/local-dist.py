@@ -9,7 +9,12 @@ from . import base
 # To extend any settings from settings/base.py here's an example.
 # If you don't need to extend any settings from base.py, you do not need
 # to import base above
-INSTALLED_APPS = base.INSTALLED_APPS + ('django_nose',)
+INSTALLED_APPS = base.INSTALLED_APPS + ('rest_framework',
+                                        #'sslify', 
+                                        #'sslserver',
+                                        'django_nose',
+                                        'api',
+                                        'api.api_demo')
 
 DATABASES = {
     'default': {
@@ -87,3 +92,9 @@ LOGGING = {
 }
 
 INTERNAL_IPS = ('127.0.0.1')
+
+COMPRESS_ENABLED = False
+
+DEBUG_TOOLBAR_PATCH_SETTINGS = False 
+#STATIC_URL = '/{{ project_name }}/static/'
+#MEDIA_URL = '/{{ project_name }}/media/'

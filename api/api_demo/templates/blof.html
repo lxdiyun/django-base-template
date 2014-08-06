@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+{% extends "_layouts/base.html" %}
+
+{% load compress %}
+{% load staticfiles %}
+
+{# use local css instead of css #}
+{% block cdn_css %}
+{% endblock cdn_css %}
+
+{% block css %}
+  <style>
+  /* Move down content because we have a fixed navbar that is 50px tall */
+  body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+  }
+  </style>
+  <link rel="stylesheet" href="{% static 'libs/angular/angular-csp.css' %}"/>
+  <link rel="stylesheet" href="{% static 'libs/bootstrap/dist/css/bootstrap.min.css' %}"/>
+  <link rel="stylesheet" href="{% static 'libs/ngtoast/dist/ngToast.css' %}"/>
+{% endblock css %}
+
+{% block page_title %}Blof{% endblock page_title %}
+{% block body_attributes %} ng-cloak ng-app="blof" {% endblock body_attributes %}
+
+{% block body %}
+<ng-toast></ng-toast>
+{{ block.super }}
+  
+{% endblock body %}
+
+{% block header %}
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" ng-controller="authController" ng-init="authState.user='{{user.username}}'">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Blof</a>
+      </div>
+      <div class="navbar-collapse collapse">
+      {% verbatim %}
+      <div ng-show="authState.user" class="navbar-form navbar-right">
+          <input type="submit" class="btn btn-warning" ng-click="logout()" value="logout {{authState.user}}"/>
+      </div>
+      <div ng-hide="authState.user">
+          <form id="id_auth_form" class="navbar-form navbar-right" ng-submit="login()">
+              <div class="form-group">
+                  <input ng-model="username" required name="username" type="text" placeholder="username" class="form-control">
+              </div>
+              <div class="form-group">
+                  <input ng-model="password" required name="password" type="password" placeholder="password" class="form-control">
+              </div>
+              <div class="btn-group">
+                  <input type="submit" class="btn btn-success" value="Login">
+                  <input type="submit" class="btn btn-primary" value="Sign Up" ng-click="register($event)">
+              </div>
+          </form>
+      </div>
+      {% endverbatim %}
+      </div><!--/.navbar-collapse -->
+    </div>
+  </div>
+  <div class="navbar navbar-fixed-bottom">
+  </div>
+{% endblock header %}
+
+{% block content %}
+{% url 'home'%}
+{{ STATIC_URL }}
+{% verbatim %}
+<div class="container">
+  <div class="row" ng-controller="postController" >
+    <div id="blof-stream" class="col-6 col-sm-6 col-lg-6">
+      <blockquote ng-repeat="post in posts">
+        <p>{{post.body}}</p>
+        <small>{{post.user}} <span class="date" title="{{post.date}}"></span>
+          <button ng-if="authState.user == post.user" ng-click="delete(post.id)" type="button"class="btn btn-danger btn-xs">delete</button>
+        </small>
+      </blockquote>
+    </div>
+    <div class="col-6 col-sm-6 col-lg-6">
+      <h1>Blof</h1>
+      <h5>Blog to enrage grammar nazis and confound spelling aficionados</h5>
+      <form class="form-horizontal">
+        <div class="form-group" ng-submit="submitPost">
+          <div class="col-lg-10">
+            <textarea ng-model="body" required class="form-control" rows="3" name="body"></textarea>
+          </div>
+        </div>
+        <button ng-click="create()" type="submit" class="btn btn-default">Antagonise</button>
+      </form>
+      <dl>
+        <dt>What?</dt>
+        <dd>Blof takes well mannered sentences and adds gramatical errors.</dd>
+        <dt>Why?</dt>
+        <dd>Some men want to watch the world burn, one sentence at a time.</dd>
+        <dt>Who?</dt>
+        <dd><a href="http://www.richardtier.com">Richard Tier</a> made this, and <a href="http://www.monofox.co.uk">monofox</a> - a social media platform for schools.</dd>
+      </dl>
+    </div>
+  </div>
+</div>
+{% endverbatim %}
+{% endblock content %}
+
+{% block footer %}
+{% endblock footer %}
+
+{# use local js instead of css #}
+{% block cdn_js %}
+{% endblock cdn_js %}
+
+{% block js %}
+  {{ block.super }}
+  <script src="{% static 'libs/underscore/underscore.js' %}"></script>
+  <script src="{% static 'libs/angular/angular.min.js' %}"></script>
+  <script src="{% static 'libs/angular-resource/angular-resource.min.js' %}"></script>
+  <script src="{% static 'libs/angular-animate/angular-animate.js' %}"></script>
+  <script src="{% static 'libs/angular-sanitize/angular-sanitize.js' %}"></script>
+  <script src="{% static 'libs/ngtoast/dist/ngToast.min.js' %}"></script>
+  <script src="{% static 'api/auth_api.js' %}"></script>
+  <script src="{% static 'js/blof.js' %}"></script>
+{% endblock js %}

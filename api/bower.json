@@ -1,0 +1,13 @@
+{
+  "name": "django_restful_api",
+  "version": "1.0.0",
+  "authors": [
+    "lxdiyun <lxdiyun@gmail.com>"
+  ],
+  "description": "restful api using django and angularjs",
+  "private": true,
+  "dependencies": {
+    "angular": "1.2",
+    "angular-resource": "1.2"
+  }
+}

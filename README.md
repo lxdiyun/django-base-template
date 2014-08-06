@@ -61,7 +61,7 @@ Any of these options can added, modified, or removed as you like after creating 
 - Create your working environment and virtualenv
 - Make sure you have libffi installed ($ sudo apt-get install libffi-dev)
 - Install Django 1.6 ($ pip install Django>=1.6)
-- $ django-admin.py startproject --template https://github.com/xenith/django-base-template/zipball/master --extension py,md,rst projectname
+- $ django-admin.py startproject --template https://github.com/lxdiyun/django-base-template/zipball/master --extension py,md,rst,ini,conf projectname
 - $ cd projectname
 - Uncomment your preferred database adapter in requirements/compiled.txt (MySQL, Postgresql, or skip this step to stick with SQLite)
 - $ pip install -r requirements/local.txt
@@ -92,6 +92,109 @@ In the next version of this template (for Django 1.7), South will likely be remo
 
 [docs]: https://docs.djangoproject.com/en/dev/topics/migrations/
 
+## Nginx and uWSGI setup ##
+
+All the examples settings is under folder production_settings
+production_settings
+|-- nginx_direct.conf
+|-- nginx_proxy_80.conf
+|-- nginx_proxy_8000.conf
+|-- uwsgi.ini
+`-- uwsgi_params
+
+### uWSGI setup ###
+Update file uwsgi.ini and uwsgi_params file if necessary, then copy uwsgi.ini to /etc/uwsgi/vassals. Restart the emperor.uwsgi services.
+
+#### Nginx setup ####
+If you want to server the django directly under the default 80 port vhost, use the config file nginx_direct.conf.
+For example in nginx.conf:
+```
+user http http;
+worker_processes  1;
+
+error_log  /var/log/nginx/error.log;
+...
+http {
+...
+  server {
+    listen       80;
+    ...
+    # copy or include nginx_proxy_80 here
+    include path_to_nginx_direct.conf
+  }
+...
+}
+```
+Or use ssl
+```
+user http http;
+worker_processes  1;
+
+error_log  /var/log/nginx/error.log;
+...
+http {
+...
+  server {
+    listen       443 ssl;
+    server_name  localhost;
+
+    ssl_certificate      cert.crt;
+    ssl_certificate_key  cert.key;
+
+    ssl_session_cache    shared:SSL:1m;
+    ssl_session_timeout  5m;
+
+    ssl_ciphers  HIGH:!aNULL:!MD5;
+    ssl_prefer_server_ciphers  on;
+
+    root   /usr/share/nginx/html;
+    location / {
+        index  index.html index.htm index.php;
+
+    # copy or include nginx_proxy_80 here
+    include path_to_nginx_direct.conf
+    }
+  }
+}
+```
+Or if you want to server the django behind some proxy, use the nginx_proxy_8000.conf file to server at 8000 port and then use nginx_proxy_80.conf to proxy pass the sub url to port 8000.
+For example in nginx.conf:
+```
+user http http;
+worker_processes  1;
+
+error_log  /var/log/nginx/error.log;
+...
+http {
+...
+  server {
+    listen       80;
+    ...
+    # copy or include nginx_proxy_80 here
+    include path_to_nginx_proxy_80.conf
+  }
+  ...
+  # copy or include nginx_proxy_8000 here, to start vhost under port 8000
+  include path_to_nginx_proxy_8000.conf
+}
+```
+Remeber to change the project folder permissions. Then restart the nginx. If all goning well, the project will server under
+- http://server/{{ project_name }}
+- https://server/{{ project_name }}
+- http://server:8000/
+- uwsgi file socket is under /tmp/{{ project_name }}.sock
+Otherwise please check the error log of nginx and uwsgi to debug.
+
+For troubles using sub url to server. Please pay attetion to SECRET_KEY settings in uwsgi_params, proxy_set_header and sub_filter settings in nginx config.
+And install third party sub_filter module if necessary.
+[docs]: http://wiki.nginx.org/HttpSubsModule
+
+More information can be found in below documentation:
+[docs]: http://uwsgi-docs.readthedocs.org/en/latest/tutorials/Django_and_nginx.html
+[docs]: http://nginx.org/en/docs/http/ngx_http_core_module.html
+[docs]: http://nginx.org/en/docs/http/ngx_http_proxy_module.html
+[docs]: http://nginx.org/en/docs/http/ngx_http_uwsgi_module.html
+
 {% endif %}
 # The {{ project_name|title }} Project #
 
@@ -104,10 +207,16 @@ Describe your project here.
 - Python 2.6 or 2.7
 - pip
 - virtualenv (virtualenvwrapper is recommended for use during development)
+- bower
 
 ## Installation ##
 
-Fill out with installation instructions for your project.
+### javascript library setup ###
+use bower to install javascript and css libraries needed by each app
+- cd $project_dir/api/static/
+- bower install
+- cd $project_dir/api/api_demo/static/
+- bower install
 
 
 License

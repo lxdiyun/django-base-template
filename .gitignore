@@ -22,3 +22,5 @@ test_db/
 *.sublime-workspace
 media/*
 static/*
+api/static/libs/*
+api/api_demo/static/libs/*

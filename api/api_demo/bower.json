@@ -1,0 +1,16 @@
+{
+  "name": "blof",
+  "version": "1.0.0",
+  "homepage": "bloffit.appsot.com",
+  "authors": [
+    "rikatee <richard@gmail.co.uk>"
+  ],
+  "description": "microblog that adds spelling mistakes for you",
+  "private": true,
+  "dependencies": {
+    "autofill-event": "1.0.0",
+    "underscore": "1.6.0",
+    "bootstrap": "3",
+    "ngtoast": "latest"
+  }
+}
