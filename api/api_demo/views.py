@@ -23,5 +23,5 @@ class BlofView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         print request.META
-        return super(BlofView, self).get(request, args, kwargs)
+        return super(BlofView, self).get(request, *args, **kwargs)
 
